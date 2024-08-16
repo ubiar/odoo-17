@@ -37,6 +37,10 @@ export const cartHandlerMixin = {
         if (data.cart_quantity && (data.cart_quantity !== parseInt($(".my_cart_quantity").text()))) {
             updateCartNavBar(data);
         };
+        data.notification_info.order_id = data.order_id;
+        data.notification_info.minimum_cost = data.minimum_cost;
+        data.notification_info.total = data.amount;
+
         showCartNotification(this.call.bind(this), data.notification_info);
         return data;
     },
@@ -116,12 +120,14 @@ function updateCartNavBar(data) {
     }
 }
 
-function showCartNotification(callService, props, options = {}) {
+async function showCartNotification(callService, props, options = {}) {
     // Show the notification about the cart
     if (props.lines) {
         callService("cartNotificationService", "add", _t("Item(s) added to your cart"), {
             lines: props.lines,
             currency_id: props.currency_id,
+            total: props.total,
+            minimum_cost: props.minimum_cost,
             ...options,
         });
     }

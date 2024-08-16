@@ -705,6 +705,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Needed to trigger the recently viewed product rpc
         view_track = request.website.viewref("website_sale.product").track
 
+        # Setear minimo de producto de manera predetermina si es que lo tiene
+        qty = 1
+        if (request.env['res.config.settings'].is_active('minimum_order_quantity')):
+            if (product.minimum_order_quantity_ok and product.minimum_order_quantity > 0):
+                qty = product.minimum_order_quantity
+
         return {
             'search': search,
             'category': category,
@@ -715,7 +721,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'categories': ProductCategory.search([('parent_id', '=', False)]),
             'main_object': product,
             'product': product,
-            'add_qty': 1,
+            'add_qty': qty,
             'view_track': view_track,
         }
 
@@ -1112,7 +1118,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         # Required fields from form
         required_fields = [f for f in (all_form_values.get('field_required') or '').split(',') if f]
-
         # Required fields from mandatory field function
         country_id = int(data.get('country_id', False))
 
@@ -1568,6 +1573,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @http.route(['/shop/checkout'], type='http', auth="public", website=True, sitemap=False)
     def checkout(self, **post):
         order_sudo = request.website.sale_get_order()
+
+        # Chequear precios
 
         redirection = self.checkout_redirection(order_sudo)
         if redirection:

@@ -30,6 +30,8 @@ export class CartNotification extends Component {
         close: Function,
         refresh: Function,
         freeze: Function,
+        total: {type: Number, optional: true},
+        minimum_cost: {type: Number, optional: true}
     }
 
     /**
