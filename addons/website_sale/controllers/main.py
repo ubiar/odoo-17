@@ -1059,13 +1059,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return all(partner_id.read(billing_fields_required)[0].values())
 
     def _get_mandatory_fields_billing(self, country_id=False):
-        req = ["name", "email", "street", "city", "country_id"]
-        if country_id:
-            country = request.env['res.country'].browse(country_id)
-            if country.state_required:
-                req += ['state_id']
-            if country.zip_required:
-                req += ['zip']
+        req = ["name", "email", "street"]
         return req
 
     def _check_shipping_partner_mandatory_fields(self, partner_id):
@@ -1074,7 +1068,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return all(partner_id.read(shipping_fields_required)[0].values())
 
     def _get_mandatory_fields_shipping(self, country_id=False):
-        req = ["name", "street", "city", "country_id", "phone"]
+        req = ["name", "street", "phone"]
         if country_id:
             country = request.env['res.country'].browse(country_id)
             if country.state_required:
@@ -1119,7 +1113,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Required fields from form
         required_fields = [f for f in (all_form_values.get('field_required') or '').split(',') if f]
         # Required fields from mandatory field function
-        country_id = int(data.get('country_id', False))
+        country_id = 10 #->> ID de Argentina
+
 
         _update_mode, address_mode = mode
         if address_mode == 'shipping':
@@ -1130,6 +1125,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 # If the billing address is also used as shipping one, the phone is required as well
                 # because it's required for shipping addresses
                 required_fields.append('phone')
+            
+        # Eliminar el codigo postal y pais de required fields
+        required_fields = [f for f in required_fields if f not in ['zip', 'country_id', 'state_id', 'city']]
+
+        # Agregar 'province' y 'city' a los campos obligatorios
+        required_fields.extend(['province_id', 'city_id'])
 
         # error message for empty required fields
         for field_name in required_fields:
@@ -1159,6 +1160,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if [err for err in error.values() if err == 'missing']:
             error_message.append(_('Some required fields are empty.'))
 
+        print(error, error_message)
         return error, error_message
 
     def _get_vat_validation_fields(self, data):
@@ -1573,8 +1575,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @http.route(['/shop/checkout'], type='http', auth="public", website=True, sitemap=False)
     def checkout(self, **post):
         order_sudo = request.website.sale_get_order()
-
-        # Chequear precios
 
         redirection = self.checkout_redirection(order_sudo)
         if redirection:

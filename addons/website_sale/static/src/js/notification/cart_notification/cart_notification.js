@@ -33,7 +33,18 @@ export class CartNotification extends Component {
         total: {type: Number, optional: true},
         minimum_cost: {type: Number, optional: true}
     }
-
+    setup() {
+        // Verifica que `props` contenga `total` y `minimum_cost` sin decimales
+        const total = Math.floor(parseFloat(this.props.total));
+        const minimumCost = Math.floor(parseFloat(this.props.minimum_cost));
+        const meetsMinimum = total <= minimumCost;
+    
+        // Asigna la comparación a una variable de estado o directamente úsala en el template
+        this.meetsMinimum = meetsMinimum;
+        this.total = total;
+        this.minimumCost = minimumCost;
+    }
+    
     /**
      * Get the top position (in px) of the notification based on the navbar height.
      *
