@@ -482,6 +482,12 @@
                         <hr class="mt-1 mb-2"/>
                         <div t-field="sale_order.partner_shipping_id" t-options='{ "widget": "contact", "fields": [ "name", "address"]}'/>
                     </span>
+                    <h4 class="mb-1">
+                        Sucursal de retiro
+                    </h4>
+                    <hr class="mt-1 mb-2"/>
+                    <div t-field="sale_order.pickup_branch.name"/>
+                    <div t-field="sale_order.pickup_branch.address"/>
                 </div>
                 <t t-set="invoices" t-value="sale_order.invoice_ids.filtered(lambda i: i.state not in ['draft', 'cancel']).sorted('date', reverse=True)[:3]"/>
                 <div id="sale_invoices" t-if="invoices and sale_order.state in ['sale', 'cancel']" class="col-12 col-lg-6 mb-4">
