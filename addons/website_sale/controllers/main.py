@@ -1069,12 +1069,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     def _get_mandatory_fields_shipping(self, country_id=False):
         req = ["name", "street", "phone"]
-        if country_id:
-            country = request.env['res.country'].browse(country_id)
-            if country.state_required:
-                req += ['state_id']
-            if country.zip_required:
-                req += ['zip']
         return req
 
     def checkout_form_validate(self, mode, all_form_values, data):
