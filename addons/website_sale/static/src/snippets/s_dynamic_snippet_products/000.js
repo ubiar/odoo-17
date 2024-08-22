@@ -133,7 +133,9 @@ const DynamicSnippetProductsCard = publicWidget.Widget.extend({
      * @param {OdooEvent} ev
      */
     async _onClickAddToCart(ev) {
+        console.log("agregando al carrito")
         const $card = $(ev.currentTarget).closest('.card');
+        console.log($card.find('input[data-product-id]').data('product-id'))
         const data = await this.rpc("/shop/cart/update_json", {
             product_id: $card.find('input[data-product-id]').data('product-id'),
             add_qty: 1,
