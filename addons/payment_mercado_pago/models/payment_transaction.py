@@ -87,7 +87,7 @@ class PaymentTransaction(models.Model):
             'items': [{
                 'title': self.reference,
                 'quantity': 1,
-                'currency_id': self.currency_id.name,
+                'currency_id': "ARS",
                 'unit_price': unit_price,
             }],
             'notification_url': webhook_url,
