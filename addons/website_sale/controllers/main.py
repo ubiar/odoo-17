@@ -1078,6 +1078,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         error = dict()
         error_message = []
 
+        print(all_form_values, data)
+
         if data.get('partner_id'):
             partner_su = request.env['res.partner'].sudo().browse(int(data['partner_id'])).exists()
             if partner_su:
@@ -1124,7 +1126,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         required_fields = [f for f in required_fields if f not in ['zip', 'country_id', 'state_id', 'city']]
 
         # Agregar 'province' y 'city' a los campos obligatorios
-        required_fields.extend(['province_id', 'city_id'])
+        required_fields.extend(['province_id', 'city_id', 'delivery_zone_id'])
 
         # error message for empty required fields
         for field_name in required_fields:
@@ -2036,8 +2038,10 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if not kwargs.get('amount'):
             kwargs['amount'] = order_sudo.amount_total
 
+        print(kwargs['amount'], order_sudo.amount_total)
         if tools.float_compare(kwargs['amount'], order_sudo.amount_total, precision_rounding=order_sudo.currency_id.rounding):
-            raise ValidationError(_("The cart has been updated. Please refresh the page."))
+        #    raise ValidationError(_("The cart has been updated. Please refresh the page."))
+            kwargs['amount'] = order_sudo.amount_total
 
         tx_sudo = self._create_transaction(
             custom_create_values={'sale_order_ids': [Command.set([order_id])]}, **kwargs,

@@ -984,7 +984,11 @@ class SaleOrderLine(models.Model):
             if vals.get('display_type') or self.default_get(['display_type']).get('display_type'):
                 vals['product_uom_qty'] = 0.0
 
+        if vals.get('cut_id'):
+            vals['cut_id'] = int(vals['cut_id'])
+
         lines = super().create(vals_list)
+
         if self.env.context.get('sale_no_log_for_new_lines'):
             return lines
 

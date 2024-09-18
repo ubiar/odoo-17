@@ -31,7 +31,8 @@ export class CartNotification extends Component {
         refresh: Function,
         freeze: Function,
         total: {type: Number, optional: true},
-        minimum_cost: {type: Number, optional: true}
+        minimum_cost: {type: Number, optional: true},
+        cut: {type: String, optional: true}
     }
     setup() {
         // Verifica que `props` contenga `total` y `minimum_cost` sin decimales
@@ -43,6 +44,12 @@ export class CartNotification extends Component {
         this.meetsMinimum = meetsMinimum;
         this.total = total;
         this.minimumCost = minimumCost;
+    }
+
+    get minFormatted() {
+        var minCost = parseFloat(this.minimumCost);
+        var formattedCost = minCost.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' });
+        return formattedCost;
     }
     
     /**

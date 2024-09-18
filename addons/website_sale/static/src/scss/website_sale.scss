@@ -759,41 +759,6 @@ a.no-decoration {
 }
 
 .o_website_sale_checkout {
-    .o_total_card {
-        // The accordion have to mimick the styling of a card
-        background-color: $card-bg;
-        border: $border-width solid $border-color;
-        border-radius: $card-border-radius;
-
-        .accordion-item {
-            @include o-bg-color(rgba($card-bg, $o-card-body-bg-opacity));
-        }
-
-        // TODO VCR This value should adapt to the offsetHeight
-        // of the header this is an arbitrary value as a temporary solution
-        // to offset the summary regarding the tallest header (Magazine)
-        @include media-breakpoint-up(lg) {
-            top: 9rem;
-        }
-
-        @include media-breakpoint-down(lg) {
-            border: 0;
-
-            .card-body, .accordion-item, .accordion-button {
-                border-radius: 0;
-                background-color: var(--o-cc1-bg) !important;
-                color: inherit;
-            }
-        }
-    }
-
-    #cart_total {
-        @include media-breakpoint-down(lg) {
-            padding-top: map-get($spacers, 3);
-            border-top: $border-width solid $border-color;
-        }
-    }
-
     .o_wsale_accordion {
         .accordion-button{
             background-color: unset;

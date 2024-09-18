@@ -823,7 +823,7 @@
             <ul class="nav d-flex flex-column my-2">
                 <li class="nav-item mb-1">
                     <div t-att-data-link-href="keep('/shop', category=0)" class="form-check d-inline-block">
-                        <input type="radio" t-attf-name="wsale_categories_radios{{_radioGroup}}" class="form-check-input pe-none o_not_editable" t-att-id="all_products" t-att-value="all_products" t-att-checked="'true' if not category else None"/>
+                        <input type="radio" t-attf-name="wsale_categories_radios{{_radioGroup}}" class="form-check-input pe-none o_not_editable" t-att-id="all_products" t-att-value="all_products" t-att-checked="'true' if not category.id else None"/>
                         <label class="form-check-label fw-normal" t-att-for="all_products">All Products</label>
                     </div>
                 </li>
@@ -1150,7 +1150,7 @@
                                     </div>
                                 </t>
                             </div>
-                            <div id="o_product_terms_and_share" class="d-flex justify-content-between flex-column flex-md-row align-items-md-end mb-3">
+                            <div id="o_product_terms_and_share" class="d-flex justify-content-between flex-column flex-md-row align-items-md-end mb-3 mt-5">
                             </div>
                         </div>
                     </div>
@@ -1207,28 +1207,6 @@
         </div>
     </template>
 
-    <template id="product_custom_text" inherit_id="website_sale.product" customize_show="True" active="True" name="Terms and Conditions" priority="21">
-        <xpath expr="//div[@id='o_product_terms_and_share']" position="inside">
-            <p class="text-muted mb-0">
-                <a href="/terms" class="text-muted"><u>Terms and Conditions</u></a><br/>
-                30-day money-back guarantee<br/>
-                Shipping: 2-3 Business Days
-            </p>
-        </xpath>
-    </template>
-
-    <template id="product_share_buttons" inherit_id="website_sale.product" active="True" name="Share Buttons" priority="22">
-        <xpath expr="//div[@id='o_product_terms_and_share']" position="inside">
-            <div class="h4 mt-3 mb-0 d-flex justify-content-md-end flex-shrink-0" contenteditable="false">
-                <t t-snippet-call="website.s_share">
-                    <t t-set="_exclude_share_links" t-value="['whatsapp', 'linkedin']"/>
-                    <t t-set="_no_title" t-value="True"/>
-                    <t t-set="_classes" t-valuef="text-lg-end"/>
-                    <t t-set="_link_classes" t-valuef="mx-1 my-0"/>
-                </t>
-            </div>
-        </xpath>
-    </template>
 
     <!-- Product options: Zoom -->
     <template inherit_id='website_sale.product' id="product_picture_magnify_hover" name="Automatic Image Zoom">

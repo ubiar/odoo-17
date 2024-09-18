@@ -134,10 +134,9 @@ const DynamicSnippetProductsCard = publicWidget.Widget.extend({
      */
     async _onClickAddToCart(ev) {
         const $card = $(ev.currentTarget).closest('.card, .slider-item');
-        console.log($card.find('input[data-product-id]').data('product-id'))
         const data = await this.rpc("/shop/cart/update_json", {
             product_id: $card.find('input[data-product-id]').data('product-id'),
-            add_qty: 1,
+            add_qty: $card.find('input[data-product-id]').data('min') || 1,
             display: false,
         });
         wSaleUtils.updateCartNavBar(data);

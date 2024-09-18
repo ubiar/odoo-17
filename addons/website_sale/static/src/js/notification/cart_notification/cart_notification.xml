@@ -15,17 +15,17 @@
                         aria-label="Close"/>
             </div>
             <div class="toast-body">
+                <div id="minimum_cost_alert_pop" t-if="this.meetsMinimum" class="minimo-compra-container-pop">
+                    <span id="minimum_cost_alert_message" class="message">El mínimo de compra es <span t-out="this.minFormatted"/></span>
+                    <span class="icon">⚠️</span> 
+                </div>
                 <WarningNotification t-if="this.props.warning" warning="this.props.warning"/>
                 <AddToCartNotification
                     t-elif="this.props.lines.length"
                     lines="this.props.lines"
                     currency_id="this.props.currency_id"
+                    cut="this.props.cut"
                 />
-                <div t-if="this.props.minimum_cost != 0" class="mt-3">
-                    <p t-if="this.meetsMinimum" class="alert alert-warning mt-2 d-inline-flex">
-                        Mínimo para realizar pedido:<strong class="ms-2">$<span t-out="this.total"/>/$<span t-out="this.minimumCost"/></strong>              
-                    </p>
-                </div>
             </div>
         </div>
     </t>

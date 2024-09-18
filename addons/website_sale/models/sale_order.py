@@ -232,7 +232,7 @@ class SaleOrder(models.Model):
             'warning': warning,
         }
 
-    def _cart_find_product_line(self, product_id, line_id=None, **kwargs):
+    def _cart_find_product_line(self, product_id, line_id=None, cut_id=None, **kwargs):
         """Find the cart line matching the given parameters.
 
         If a product_id is given, the line will match the product only if the
@@ -253,11 +253,18 @@ class SaleOrder(models.Model):
             return SaleOrderLine
 
         domain = [('order_id', '=', self.id), ('product_id', '=', product_id)]
+
+        print(cut_id)
+
+        if cut_id:
+            domain += [('cut_id', '=', cut_id)]
+
         if line_id:
             domain += [('id', '=', line_id)]
         else:
             domain += [('product_custom_attribute_value_ids', '=', False)]
 
+        print(domain)
         return SaleOrderLine.search(domain)
 
     # hook to be overridden

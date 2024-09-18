@@ -36,6 +36,8 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         this.paymentContext = {};
         Object.assign(this.paymentContext, this.el.dataset);
 
+        console.log("payment_form", this.el.dataset)
+
         await this._super(...arguments);
 
         // Expand the payment form of the selected payment option if there is only one.
@@ -155,6 +157,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             this.paymentContext.tokenizationRequested = inlineForm?.querySelector(
                 '[name="o_payment_tokenize_checkbox"]'
             )?.checked ?? this.paymentContext['mode'] === 'validation';
+            console.log(providerCode, paymentOptionId, pmCode, flow)
             await this._initiatePaymentFlow(providerCode, paymentOptionId, pmCode, flow);
         }
     },
@@ -378,6 +381,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             this.paymentContext['transactionRoute'],
             this._prepareTransactionRouteParams(),
         ).then(processingValues => {
+            console.log(processingValues)
             if (flow === 'redirect') {
                 this._processRedirectFlow(
                     providerCode, paymentOptionId, paymentMethodCode, processingValues
