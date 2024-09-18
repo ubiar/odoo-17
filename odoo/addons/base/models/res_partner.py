@@ -162,7 +162,7 @@ class PartnerTitle(models.Model):
 
 
 class Partner(models.Model):
-    _description = 'Contact'
+    _description = 'f'
     _inherit = ['format.address.mixin', 'avatar.mixin']
     _name = "res.partner"
     _order = "complete_name ASC, id DESC"
