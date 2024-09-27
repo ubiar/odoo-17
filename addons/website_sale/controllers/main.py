@@ -1126,7 +1126,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         required_fields = [f for f in required_fields if f not in ['zip', 'country_id', 'state_id', 'city']]
 
         # Agregar 'province' y 'city' a los campos obligatorios
-        required_fields.extend(['province_id', 'city_id', 'delivery_zone_id'])
+        required_fields.extend(['province_id', 'city_id', 'delivery_zone_id', 'document_number'])
 
         # error message for empty required fields
         for field_name in required_fields:
