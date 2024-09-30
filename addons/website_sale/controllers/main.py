@@ -1128,6 +1128,22 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Agregar 'province' y 'city' a los campos obligatorios
         required_fields.extend(['province_id', 'city_id', 'delivery_zone_id', 'document_number'])
 
+        document_number = data['document_number']
+        document_type = data['document_type']
+
+        if not document_number:
+            error['document_number'] = 'missing'
+            error_message.append("El número de documento es necesario")
+        else:
+            if document_type == 'dni':
+                if len(document_number) < 7 or len(document_number) > 8:
+                    error['document_number'] = 'error'
+                    error_message.append("Ingrese un DNI válido")
+            elif document_type == 'cuit':
+                if len(document_number) != 11:
+                    error['document_number'] = 'error'
+                    error_message.append(_('Ingrese un CUIT válido'))
+
         # error message for empty required fields
         for field_name in required_fields:
             val = data.get(field_name)

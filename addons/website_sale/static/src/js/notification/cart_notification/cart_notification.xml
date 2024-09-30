@@ -25,6 +25,7 @@
                     lines="this.props.lines"
                     currency_id="this.props.currency_id"
                     cut="this.props.cut"
+                    udv_name="this.props.udv_name"
                 />
             </div>
         </div>

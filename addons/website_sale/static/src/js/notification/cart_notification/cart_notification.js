@@ -31,6 +31,7 @@ export class CartNotification extends Component {
         refresh: Function,
         freeze: Function,
         total: {type: Number, optional: true},
+        udv_name: { type: String, optional: true },
         minimum_cost: {type: Number, optional: true},
         cut: {type: String, optional: true}
     }

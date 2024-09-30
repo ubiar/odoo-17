@@ -21,7 +21,8 @@ export class AddToCartNotification extends Component {
             },
         },
         currency_id: Number,
-        cut: { type: String, optional: true}
+        cut: { type: String, optional: true},
+        udv_name: { type: String, optional: true} 
     }
 
     /**
@@ -44,6 +45,6 @@ export class AddToCartNotification extends Component {
      * @return {String} - The product summary.
      */
     getProductSummary(line) {
-        return line.quantity + " x " + line.name + (this.props.cut ? " (" + this.props.cut + ")" : "")
+        return line.quantity + " " +  this.props.udv_name + " x " + line.name + (this.props.cut ? " (" + this.props.cut + ")" : "")
     }
 }

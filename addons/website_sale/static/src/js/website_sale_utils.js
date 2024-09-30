@@ -31,8 +31,7 @@ export const cartHandlerMixin = {
     async _addToCartInPage(params) {
         const cutId = $('#select-cut').val()
         const cutName = $('#select-cut option:selected').text().trim()
-
-        console.log(cutId, cutName)
+        const udv_name = $('#udv_name').text().replace("(" , "").replace(')', '')
 
         const data = await this.rpc("/shop/cart/update_json", {
             ...params,
@@ -43,10 +42,12 @@ export const cartHandlerMixin = {
         if (data.cart_quantity && (data.cart_quantity !== parseInt($(".my_cart_quantity").text()))) {
             updateCartNavBar(data);
         };
+
         data.notification_info.order_id = data.order_id;
         data.notification_info.minimum_cost = data.minimum_cost;
         data.notification_info.total = data.amount;
         data.notification_info.cut = cutName;
+        data.notification_info.udv_name = udv_name;
 
         showCartNotification(this.call.bind(this), data.notification_info);
         return data;
@@ -136,6 +137,7 @@ async function showCartNotification(callService, props, options = {}) {
             total: props.total,
             minimum_cost: props.minimum_cost,
             cut: props.cut,
+            udv_name: props.udv_name,
             ...options,
         });
     }

@@ -26,7 +26,7 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'demo':
             return
 
-        notification_data = {'reference': self.reference, 'simulated_state': 'pending'}
+        notification_data = {'reference': self.reference, 'simulated_state': 'done'}
         self._handle_notification_data('demo', notification_data)
 
     def action_demo_set_canceled(self):
