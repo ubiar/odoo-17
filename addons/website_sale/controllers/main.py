@@ -1078,8 +1078,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         error = dict()
         error_message = []
 
-        print(all_form_values, data)
-
         if data.get('partner_id'):
             partner_su = request.env['res.partner'].sudo().browse(int(data['partner_id'])).exists()
             if partner_su:
