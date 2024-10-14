@@ -55,7 +55,7 @@
                 <xpath expr="//field[@name='company_id']" position="after">
                     <field name="fiscal_country_codes" invisible="1"/>
                 </xpath>
-                <page name="inventory" position="after">
+                <page name="inventory" position="after" invisible="1">
                     <page string="Accounting" name="invoicing" groups="account.group_account_readonly,account.group_account_invoice">
                         <group name="properties" groups="account.group_account_readonly">
                             <group string="Receivables">

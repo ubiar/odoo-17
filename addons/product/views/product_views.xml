@@ -111,12 +111,12 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Purchase" name="purchase" invisible="1 or not purchase_ok">
-                            <group name="purchase">
+                        <page string="Purchase" name="purchase" invisible="1">
+                            <group name="purchase" invisible="1">
                                 <group string="Vendor Bills" name="bill"/>
                             </group>
                         </page>
-                        <page string="Inventory" name="inventory" groups="product.group_stock_packaging" invisible="type == 'service'">
+                        <page string="Inventory" name="inventory" groups="product.group_stock_packaging" invisible="1">
                             <group name="inventory">
                                 <group name="group_lots_and_weight" string="Logistics" invisible="type not in ['product', 'consu']">
                                     <label for="weight" invisible="product_variant_count &gt; 1 and not is_product_variant"/>
