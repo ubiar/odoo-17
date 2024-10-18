@@ -707,9 +707,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         # Setear minimo de producto de manera predetermina si es que lo tiene
         qty = 1
-        if (request.env['res.config.settings'].is_active('minimum_order_quantity')):
-            if (product.minimum_order_quantity_ok and product.minimum_order_quantity > 0):
-                qty = product.minimum_order_quantity
+        if (request.env['res.config.settings'].is_active('minimo_compra')):
+            if (product.minimo_compra_ok and product.minimo_compra > 0):
+                qty = product.minimo_compra
 
         return {
             'search': search,

@@ -502,11 +502,17 @@ class Website(Home):
         result = []
         for record in results_data:
             mapping = record['_mapping']
+
+            if record.get('_fa') == 'fa-file-o':
+                continue
+            
             mapped = {
                 '_fa': record.get('_fa'),
             }
+            print(mapped)
             for mapped_name, field_meta in mapping.items():
                 value = record.get(field_meta.get('name'))
+
                 if not value:
                     mapped[mapped_name] = ''
                     continue
