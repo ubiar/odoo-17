@@ -81,6 +81,9 @@ class Product(models.Model):
         self.ensure_one()
         variant_images = list(self.product_variant_image_ids)
         template_images = list(self.product_tmpl_id.product_template_image_ids)
+        # imagenes_advance = list(self.imagenes_ids)
+        # print("from product_product print", [self] + variant_images + template_images, self.imagenes_ids )
+
         return [self] + variant_images + template_images
 
     def _get_combination_info_variant(self, **kwargs):

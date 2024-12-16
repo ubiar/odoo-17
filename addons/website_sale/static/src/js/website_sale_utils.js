@@ -32,22 +32,25 @@ export const cartHandlerMixin = {
         const cutId = $('#select-cut').val()
         const cutName = $('#select-cut option:selected').text().trim()
         const udv_name = $('#udv_name').text().replace("(" , "").replace(')', '')
+        
+        const lotesIds = Array.from(document.querySelectorAll('.lote-checkbox:checked')).map(checkbox => parseInt(checkbox.dataset.loteId));
 
         const data = await this.rpc("/shop/cart/update_json", {
             ...params,
             display: false,
             force_create: true,
-            cut: cutId
+            cut: cutId,
+            lotes: lotesIds
         });
         if (data.cart_quantity && (data.cart_quantity !== parseInt($(".my_cart_quantity").text()))) {
             updateCartNavBar(data);
         };
-
         data.notification_info.order_id = data.order_id;
         data.notification_info.minimum_cost = data.minimum_cost;
         data.notification_info.total = data.amount;
         data.notification_info.cut = cutName;
         data.notification_info.udv_name = udv_name;
+        data.notification_info.supera_stock = data.supera_stock;
 
         showCartNotification(this.call.bind(this), data.notification_info);
         return data;
@@ -138,6 +141,7 @@ async function showCartNotification(callService, props, options = {}) {
             minimum_cost: props.minimum_cost,
             cut: props.cut,
             udv_name: props.udv_name,
+            supera_stock: props.supera_stock,
             ...options,
         });
     }

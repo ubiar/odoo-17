@@ -33,7 +33,8 @@ export class CartNotification extends Component {
         total: {type: Number, optional: true},
         udv_name: { type: String, optional: true },
         minimum_cost: {type: Number, optional: true},
-        cut: {type: String, optional: true}
+        cut: {type: String, optional: true},
+        supera_stock: {type: Boolean, optional: true}
     }
     setup() {
         // Verifica que `props` contenga `total` y `minimum_cost` sin decimales

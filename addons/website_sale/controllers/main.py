@@ -497,7 +497,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return request.render("website_sale.products", values)
 
     @http.route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=True)
-    def product(self, product, category='', search='', **kwargs):
+    def product(self, product, category='', search='', **kwargs): 
         return request.render("website_sale.product", self._prepare_product_values(product, category, search, **kwargs))
 
     @http.route(
@@ -710,11 +710,23 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if (request.env['res.config.settings'].is_active('minimo_compra')):
             if (product.minimo_compra_ok and product.minimo_compra > 0):
                 qty = product.minimo_compra
+        
+        order = request.website.sale_get_order()
 
+        product._compute_stock_advance()
+
+        cantidad_carrito = 0
+        # if order:
+        #     for line in order.order_line:
+        #         if line.product_id.id == product.product_variant_id.id:
+        #             cantidad_carrito += line.product_uom_qty * line.product_id.factor_conversion
+        # print(cantidad_carrito)
         return {
             'search': search,
             'category': category,
+            'cantidad_carrito': cantidad_carrito,
             'pricelist': request.website.pricelist_id,
+            'stock_total': product.stock_advance,
             'attrib_values': attrib_values,
             'attrib_set': attrib_set,
             'keep': keep,
@@ -984,7 +996,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     'quantity': line._get_displayed_quantity(),
                     'name': line.name_short,
                     'description': line._get_sale_order_line_multiline_description_variants(),
-                    'line_price_total': line.price_total if show_tax else line.price_subtotal,
+                    'line_price_total': line.price_total
                 } for line in lines
             ],
         }
@@ -1753,6 +1765,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 values['deliveries'] = order._get_delivery_methods().sudo()
 
             values['delivery_has_storable'] = has_storable_products
+            values['permite_retiro'] = request.env['res.config.settings'].sudo().permite_retiro_local()
+            values['permite_envio'] = request.env['res.config.settings'].sudo().permite_envio()
             values['delivery_action_id'] = request.env.ref(
                 'delivery.action_delivery_carrier_form'
             ).id
@@ -1813,6 +1827,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             render_values.pop('payment_methods_sudo', '')
             render_values.pop('tokens_sudo', '')
 
+        print(render_values)
         return request.render("website_sale.payment", render_values)
 
     @http.route('/shop/payment/validate', type='http', auth="public", website=True, sitemap=False)

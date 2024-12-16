@@ -601,16 +601,35 @@ class SaleOrderLine(models.Model):
         :return: A python dictionary.
         """
         self.ensure_one()
+
+        price_procesado = self.product_id.lst_price
+        if self.lotes_ids:
+            self.product_uom_qty = sum(lot.product_qty for lot in self.lotes_ids) 
+
+        if self._is_delivery():
+            return self.env['account.tax']._convert_to_tax_base_line_dict(
+                self,
+                partner=self.order_id.partner_id,
+                currency=self.order_id.currency_id,
+                product=self.product_id,
+                taxes=self.tax_id,
+                price_unit=self.price_unit,
+                quantity=self.product_uom_qty,
+                discount=self.discount,
+                price_subtotal=self.price_subtotal,
+                **kwargs,
+            )
+        
         return self.env['account.tax']._convert_to_tax_base_line_dict(
             self,
             partner=self.order_id.partner_id,
             currency=self.order_id.currency_id,
             product=self.product_id,
             taxes=self.tax_id,
-            price_unit=self.price_unit,
+            price_unit=price_procesado,
             quantity=self.product_uom_qty,
             discount=self.discount,
-            price_subtotal=self.price_subtotal,
+            price_subtotal=price_procesado * self.product_uom_qty,
             **kwargs,
         )
 
@@ -626,12 +645,14 @@ class SaleOrderLine(models.Model):
             totals = list(tax_results['totals'].values())[0]
             amount_untaxed = totals['amount_untaxed']
             amount_tax = totals['amount_tax']
-
+            
+            print(amount_untaxed, amount_tax)
             line.update({
                 'price_subtotal': amount_untaxed,
                 'price_tax': amount_tax,
-                'price_total': amount_untaxed + amount_tax,
+                'price_total': amount_untaxed + amount_tax if not self.env['res.config.settings'].is_active('muestra_impuestos') else amount_untaxed
             })
+            print(line.price_total)
 
     @api.depends('price_subtotal', 'product_uom_qty')
     def _compute_price_reduce_taxexcl(self):

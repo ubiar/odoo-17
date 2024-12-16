@@ -97,7 +97,7 @@ class PurchaseOrderLine(models.Model):
             line.update({
                 'price_subtotal': amount_untaxed,
                 'price_tax': amount_tax,
-                'price_total': amount_untaxed + amount_tax,
+                'price_total': amount_untaxed
             })
 
     def _convert_to_tax_base_line_dict(self):

@@ -712,6 +712,7 @@ class ProductTemplate(models.Model):
         Template Extra Images.
         """
         self.ensure_one()
+        # print("from product_template print", [self] + list(self.product_template_image_ids) )
         return [self] + list(self.product_template_image_ids)
 
     @api.model

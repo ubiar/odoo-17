@@ -1846,13 +1846,17 @@ Please change the quantity done or the rounding precision of your unit of measur
 
         # Create extra moves where necessary
         for move in moves:
+            print(move.picked, move.is_inventory, move.state, move.quantity)
             if move.state == 'cancel' or (move.quantity <= 0 and not move.is_inventory):
                 continue
             if not move.picked:
                 continue
+        
+            print("llegue")
             moves_ids_todo |= move._create_extra_move().ids
 
         moves_todo = self.browse(moves_ids_todo)
+        print(moves_ids_todo)
         moves_todo._check_company()
         if not cancel_backorder:
             # Split moves where necessary and move quants

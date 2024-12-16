@@ -149,7 +149,7 @@ class PaymentTransaction(models.Model):
         payment_id = notification_data.get('payment_id')
         if not payment_id:
             raise ValidationError("Mercado Pago: " + _("Received data with missing payment id."))
-        self.provider_reference = payment_id
+        self.provider_reference = ccccbnm
 
         # Verify the notification data.
         verified_payment_data = self.provider_id._mercado_pago_make_request(

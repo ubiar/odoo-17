@@ -19,6 +19,10 @@
                     <span id="minimum_cost_alert_message" class="message">El mínimo de compra es <span t-out="this.minFormatted"/></span>
                     <span class="icon">⚠️</span> 
                 </div>
+                <div id="minimum_cost_alert_pop" t-if="this.props.supera_stock" class="minimo-compra-container-pop">
+                    <span id="minimum_cost_alert_message" class="message">¡Se agregó el máximo de stock encontrado!</span>
+                    <span class="icon">⚠️</span> 
+                </div>
                 <WarningNotification t-if="this.props.warning" warning="this.props.warning"/>
                 <AddToCartNotification
                     t-elif="this.props.lines.length"
