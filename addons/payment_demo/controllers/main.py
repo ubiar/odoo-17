@@ -17,7 +17,7 @@ class PaymentDemoController(http.Controller):
         order = request.website.sale_get_order()
 
         order.write({
-            'payment_method': 'mp' if data.get('method') == 'mp' else 'efectivo'
+            'payment_method': 'mp' if  data.get('method') == 'mp' else 'tarjeta' if  data.get('method') == 'tarjeta' else 'efectivo'
         })
 
         request.env['payment.transaction'].sudo()._handle_notification_data('demo', data)

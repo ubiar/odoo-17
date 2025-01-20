@@ -4,11 +4,11 @@
     <t t-name="payment.transactionDetails">
         <div>  <!-- Single parent element to allow using renderToElement. -->
             <t t-set="alert_style" t-value="'info'"/>
-            <t t-set="alert_header" t-value="'Please wait...'"/>
+            <t t-set="alert_header" t-value="'Por favor, espera...'"/>
             <t t-if="state == 'draft'">
                 <t t-set="alert_message"
                    t-value="display_message ? display_message
-                   : 'Your payment has not been processed yet.'"
+                   : 'El pago aún no fue procesado.'"
                 />
             </t>
             <t t-elif="state == 'pending'">
@@ -22,14 +22,14 @@
             <t t-elif="state == 'done'">
                 <t t-set="alert_style" t-value="'success'"/>
                 <t t-set="alert_header"
-                   t-value="operation !== 'validation' ? 'Your payment has been processed' :
+                   t-value="operation !== 'validation' ? 'Tu pedido está siendo procesado, por favor, espera' :
                             'Your payment method has been saved'"
                 />
             </t>
             <t t-elif="state == 'cancel'">
                 <t t-set="alert_style" t-value="'danger'"/>
-                <t t-set="alert_header" t-value="'This payment has been canceled'"/>
-                <t t-set="alert_message" t-value="'No payment has been processed.'"/>
+                <t t-set="alert_header" t-value="'El pago fue cancelado'"/>
+                <t t-set="alert_message" t-value="'Tu pedido no fue procesado.'"/>
             </t>
             <t t-elif="state == 'error'">
                 <t t-set="alert_style" t-value="'danger'"/>

@@ -40,7 +40,9 @@ class PaymentTransaction(models.Model):
         )
         api_url = self.provider_id._mercado_pago_make_request(
             '/checkout/preferences', payload=payload
-        )['init_point' if self.provider_id.state == 'enabled' else 'sandbox_init_point']
+        )['init_point']
+
+        # )['init_point' if self.provider_id.state == 'enabled' else 'sandbox_init_point']
 
         # Extract the payment link URL and params and embed them in the redirect form.
         parsed_url = urls.url_parse(api_url)
@@ -76,6 +78,16 @@ class PaymentTransaction(models.Model):
                 ))
             unit_price = rounded_unit_price
 
+        # Conseguir el codigo externo formateado
+        # sale_order_id = self.env['sale.order'].sudo().search([('name', '=', self.reference.split("-")[0])], limit=1)
+        # if not sale_order_id:
+        #     _logger.error(f"Orden de venta {self.reference} no encontrada.")
+        #     return
+
+        # ir_config = self.env["ir.config_parameter"].sudo()
+        # prefijo = ir_config.get_param('ecommerce_base.adv_prefijo', default="ECOM")
+        # external_reference = f"{prefijo}-{str(sale_order_id.id).zfill(8)}"
+
         return {
             'auto_return': 'all',
             'back_urls': {
@@ -93,14 +105,6 @@ class PaymentTransaction(models.Model):
             'notification_url': webhook_url,
             'payer': {
                 'name': self.partner_name,
-                'email': self.partner_email,
-                'phone': {
-                    'number': self.partner_phone,
-                },
-                'address': {
-                    'zip_code': self.partner_zip,
-                    'street_name': self.partner_address,
-                },
             },
             'payment_methods': {
                 'installments': 1,  # Prevent MP from proposing several installments for a payment.
@@ -149,7 +153,7 @@ class PaymentTransaction(models.Model):
         payment_id = notification_data.get('payment_id')
         if not payment_id:
             raise ValidationError("Mercado Pago: " + _("Received data with missing payment id."))
-        self.provider_reference = ccccbnm
+        self.provider_reference = payment_id
 
         # Verify the notification data.
         verified_payment_data = self.provider_id._mercado_pago_make_request(
@@ -180,6 +184,21 @@ class PaymentTransaction(models.Model):
             self._set_pending()
         elif payment_status in const.TRANSACTION_STATUS_MAPPING['done']:
             self._set_done()
+
+            sale_order_id = self.env['sale.order'].sudo().search([('name', '=', verified_payment_data.get('external_reference'))], limit=1)
+            sale_order_id.write({
+                'pagado_anticipado': True
+            })
+
+            # ir_config = self.env["ir.config_parameter"].sudo()
+            # advance_url = ir_config.get_param('ecommerce_base.advance_url', default="")           
+            # headers = {'Content-Type': 'application/json', "Authorization": "Bearer CRISTIAN"}
+            # payload = {
+            #     'params': {
+            #         'codigo_externo': verified_payment_data.get('external_reference')     
+            #     }
+            # }
+            # requests.post(f"{advance_url}/advance/mercado_pago/confirmar", json=payload, headers=headers)
         elif payment_status in const.TRANSACTION_STATUS_MAPPING['canceled']:
             self._set_canceled()
         elif payment_status in const.TRANSACTION_STATUS_MAPPING['error']:
