@@ -264,6 +264,8 @@ class ProductTemplate(models.Model):
 
         base_sales_prices = self._price_compute('list_price', currency=currency)
 
+        print(base_sales_prices)
+
         res = {}
         for template in self:
             price_reduce = sales_prices[template.id]
@@ -292,20 +294,21 @@ class ProductTemplate(models.Model):
             elif show_discount and price_list_contains_template:
                 base_price = base_sales_prices[template.id]
 
-                # Compare_list_price are never tax included
-                base_price = self._apply_taxes_to_price(
-                    base_price, currency, product_taxes, taxes, template,
-                )
+                # # Compare_list_price are never tax included
+                # base_price = self._apply_taxes_to_price(
+                #     base_price, currency, product_taxes, taxes, template,
+                # )
 
-            price_reduce = self._apply_taxes_to_price(
-                price_reduce, currency, product_taxes, taxes, template,
-            )
-
+            # price_reduce = self._apply_taxes_to_price(
+            #     price_reduce, currency, product_taxes, taxes, template,
+            # )
+            
             template_price_vals = {
                 'price_reduce': price_reduce,
             }
             if base_price:
                 template_price_vals['base_price'] = base_price
+            
 
             res[template.id] = template_price_vals
 

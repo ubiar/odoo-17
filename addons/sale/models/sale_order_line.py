@@ -650,7 +650,7 @@ class SaleOrderLine(models.Model):
             line.update({
                 'price_subtotal': amount_untaxed,
                 'price_tax': amount_tax,
-                'price_total': amount_untaxed + amount_tax if not self.env['res.config.settings'].is_active('muestra_impuestos') else amount_untaxed
+                'price_total': amount_untaxed + amount_tax #if not self.env['res.config.settings'].is_active('muestra_impuestos') else amount_untaxed
             })
             print(line.price_total)
 

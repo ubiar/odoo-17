@@ -852,6 +852,7 @@ class Users(models.Model):
     def _login(cls, db, login, password, user_agent_env):
         if not password:
             raise AccessDenied()
+
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
         try:
             with cls.pool.cursor() as cr:

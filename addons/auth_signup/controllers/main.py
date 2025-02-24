@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
+import re
 import werkzeug
 from werkzeug.urls import url_encode
 
@@ -38,9 +39,10 @@ class AuthSignupHome(Home):
 
         if not qcontext.get('token') and not qcontext.get('signup_enabled'):
             raise werkzeug.exceptions.NotFound()
+        
 
         if 'error' not in qcontext and request.httprequest.method == 'POST':
-            try:
+            try:                
                 self.do_signup(qcontext)
 
                 # Set user to public if they were not signed in by do_signup
@@ -144,10 +146,20 @@ class AuthSignupHome(Home):
 
     def _prepare_signup_values(self, qcontext):
         values = { key: qcontext.get(key) for key in ('login', 'name', 'password') }
+
         if not values:
             raise UserError(_("The form was not properly filled in."))
+        if '@' not in values.get('login'):
+            raise UserError(_("Ingresa un email válido para continuar"))
+        pattern = r'^[a-zA-ZÁÉÍÓÚáéíóúÑñ\s]+$'
+        if not re.match(pattern, values['name']):
+            raise UserError(_("El nombre que ingresaste tiene caracteres inválidos."))
+        pattern = r'^(?=.*\d).{8,}$'
+        if not re.match(pattern, values['password']):
+            raise UserError(_("La contraseña debe tener 8 digitos y al menos una letra"))
         if values.get('password') != qcontext.get('confirm_password'):
             raise UserError(_("Passwords do not match; please retype them."))
+
         supported_lang_codes = [code for code, _ in request.env['res.lang'].get_installed()]
         lang = request.context.get('lang', '')
         if lang in supported_lang_codes:
