@@ -1005,7 +1005,7 @@ class SaleOrderLine(models.Model):
             if vals.get('display_type') or self.default_get(['display_type']).get('display_type'):
                 vals['product_uom_qty'] = 0.0
 
-        if vals.get('cut_id'):
+        if vals.get('cut_id') and vals.get('cut_id') != 'Ninguna':
             vals['cut_id'] = int(vals['cut_id'])
 
         lines = super().create(vals_list)
