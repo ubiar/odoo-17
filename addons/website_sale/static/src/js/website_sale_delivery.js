@@ -131,6 +131,17 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
       const result = await this.rpc('/shop/carrier_rate_shipment', {
             'carrier_id': carrierInput.value,
       });
+      
+        if (result.has_delivery === false) {
+            const carrierInput = document.querySelector(`input[name="delivery_type"][value="${result.carrier_id}"]`);
+            if (carrierInput) {
+                const carrierItem = carrierInput.closest("li.o_delivery_carrier_select");
+                if (carrierItem) {
+                    carrierItem.remove();
+                }
+            }
+        }
+
       this._handleCarrierUpdateResultBadge(result);
     },
     /**
