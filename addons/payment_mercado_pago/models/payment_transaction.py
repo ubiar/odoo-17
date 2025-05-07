@@ -187,6 +187,7 @@ class PaymentTransaction(models.Model):
 
             sale_order_id = self.env['sale.order'].sudo().search([('name', '=', verified_payment_data.get('external_reference'))], limit=1)
             sale_order_id.write({
+                'payment_method': "mp",
                 'pagado_anticipado': True
             })
 

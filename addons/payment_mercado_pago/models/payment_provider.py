@@ -19,7 +19,7 @@ class PaymentProvider(models.Model):
     _inherit = 'payment.provider'
 
     code = fields.Selection(
-        selection_add=[('fiserv', "Fiserv")], ondelete={'fiserv': 'set default'}
+        selection_add=[('mercado_pago', "Mercado Pago")], ondelete={'mercado_pago': 'set default'}
     )
     mercado_pago_access_token = fields.Char(
         string="Mercado Pago Access Token",
