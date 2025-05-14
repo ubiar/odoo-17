@@ -639,20 +639,20 @@ class SaleOrderLine(models.Model):
         Compute the amounts of the SO line.
         """
         for line in self:
+            line_save_price = line._convert_to_tax_base_line_dict()['price_subtotal']
             tax_results = self.env['account.tax'].with_company(line.company_id)._compute_taxes([
                 line._convert_to_tax_base_line_dict()
             ])
+
             totals = list(tax_results['totals'].values())[0]
-            amount_untaxed = totals['amount_untaxed']
-            amount_tax = totals['amount_tax']
+            amount_untaxed = totals['amount_untaxed'] - ((line_save_price if line_save_price else totals['amount_untaxed']) * line.product_id.porcentaje_impuesto if self.env['res.config.settings'].is_active('muestra_impuestos') else 0)
+            amount_tax = totals['amount_tax'] + ((line_save_price if line_save_price else totals['amount_untaxed']) * line.product_id.porcentaje_impuesto if self.env['res.config.settings'].is_active('muestra_impuestos') else 0)
             
-            print(amount_untaxed, amount_tax)
             line.update({
                 'price_subtotal': amount_untaxed,
                 'price_tax': amount_tax,
                 'price_total': amount_untaxed + amount_tax #if not self.env['res.config.settings'].is_active('muestra_impuestos') else amount_untaxed
             })
-            print(line.price_total)
 
     @api.depends('price_subtotal', 'product_uom_qty')
     def _compute_price_reduce_taxexcl(self):
