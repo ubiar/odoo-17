@@ -142,6 +142,8 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             }
         }
 
+        console.log(result)
+
       this._handleCarrierUpdateResultBadge(result);
     },
     /**
@@ -200,7 +202,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
 
         if (result.status === true) {
              // if free delivery (`free_over` field), show 'Free', not '$0'
-             if (result.is_free_delivery) {
+             if (result.new_amount_delivery_raw == 0 || result.amount_delivery == 0) {
                  $carrierBadge.text(_t('Free'));
              } else {
                  $carrierBadge.html(result.new_amount_delivery);
