@@ -1865,7 +1865,7 @@
     </template>
 
     <!-- /shop/address route -->
-    <template id="address" name="Address Management">
+    <template id="address" name="Direcciones">
         <t t-set="no_footer" t-value="1"/>
         <t t-call="website.layout">
             <div id="wrap">
