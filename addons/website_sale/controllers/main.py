@@ -1765,6 +1765,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     order._remove_delivery_line()
                     order._check_carrier_quotation()
                 values['deliveries'] = order._get_delivery_methods().sudo()
+                # Si el carrier actual no está en los disponibles, reasignar
+                if order.carrier_id and order.carrier_id not in values['deliveries']:
+                    order._remove_delivery_line()
+                    order._check_carrier_quotation()
 
             values['delivery_has_storable'] = has_storable_products
             values['permite_retiro'] = request.env['res.config.settings'].sudo().permite_retiro_local()
