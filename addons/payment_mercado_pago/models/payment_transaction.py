@@ -185,7 +185,8 @@ class PaymentTransaction(models.Model):
         elif payment_status in const.TRANSACTION_STATUS_MAPPING['done']:
             self._set_done()
 
-            sale_order_id = self.env['sale.order'].sudo().search([('name', '=', verified_payment_data.get('external_reference'))], limit=1)
+            external_ref = (verified_payment_data.get('external_reference') or '').split('-')[0]
+            sale_order_id = self.env['sale.order'].sudo().search([('name', '=', external_ref)], limit=1)
             sale_order_id.write({
                 'payment_method': "mp",
                 'pagado_anticipado': True
