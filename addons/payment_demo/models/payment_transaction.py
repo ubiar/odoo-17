@@ -74,7 +74,6 @@ class PaymentTransaction(models.Model):
             raise UserError("Demo: " + _("The transaction is not linked to a token."))
 
         simulated_state = self.token_id.demo_simulated_state
-        print(simulated_state)
         notification_data = {'reference': self.reference, 'simulated_state': simulated_state}
         self._handle_notification_data('demo', notification_data)
 
@@ -108,7 +107,6 @@ class PaymentTransaction(models.Model):
             'simulated_state': 'done',
             'manual_capture': True,  # Distinguish manual captures from regular one-step captures.
         }
-        print("bb", notification_data)
         tx._handle_notification_data('demo', notification_data)
 
         return child_capture_tx
@@ -173,9 +171,7 @@ class PaymentTransaction(models.Model):
             self._demo_tokenize_from_notification_data(notification_data)
 
         # Update the payment state.
-        #state = notification_data['simulated_state']
-        #print("aa", state)
-        state = "pending"
+        state = notification_data['simulated_state']
         if state == 'pending':
             self._set_pending()
         elif state == 'done':
@@ -209,7 +205,7 @@ class PaymentTransaction(models.Model):
             'payment_details': notification_data['payment_details'],
             'partner_id': self.partner_id.id,
             'provider_ref': 'fake provider reference',
-            'demo_simulated_state': "pending",
+            'demo_simulated_state': state,
         })
         self.write({
             'token_id': token,
